@@ -6,12 +6,20 @@ type DTOEntity struct {
 }
 
 type UserDTO struct {
-	Id    string `json:"id"`
-	Name  string `json:"name"`
-	Role  string `json:"role"`
-	Email string `json:"email"`
+	Id    string  `json:"id"`
+	Name  string  `json:"name"`
+	Role  RoleDTO `json:"role"`
+	Email string  `json:"email"`
+}
+
+type RoleDTO struct {
+	Role string `json:"role"`
+}
+
+type PermissionDTO struct {
+	Name string `json:"name"`
 }
 
 type UserListDTO struct {
-	User []UserDTO `json:"users"`
+	Users []UserDTO `json:"users"`
 }

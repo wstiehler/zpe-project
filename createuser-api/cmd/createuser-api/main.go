@@ -47,7 +47,7 @@ func main() {
 		}
 	}()
 
-	err = config.DB.AutoMigrate(createuser.UserEntity{})
+	err = config.DB.AutoMigrate(createuser.UserEntity{}, createuser.RoleEntity{}, createuser.PermissionEntity{})
 
 	if err != nil {
 		logger.Fatal(fmt.Sprintf("Captured panic: %v", err))

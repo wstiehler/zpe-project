@@ -12,7 +12,7 @@ services:
       - data:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=12345
-      - MYSQL_DATABASE=zpe_database
+      - MYSQL_DATABASE=zpe_api
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 20s
