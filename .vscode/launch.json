@@ -20,7 +20,7 @@
             "mode": "auto",
             "program": "createuser-api/cmd/createuser-api/main.go",
             "env": {
-                "APPLICATION_PORT":":8080",
+                "APPLICATION_PORT":":8081",
                 "APPLICATION_ADDRESS":"localhost",
                 "MYSQL_HOST":"localhost",
                 "MYSQL_USER":"root",
@@ -31,6 +31,26 @@
                 "INTERVAL_GET_KEYS_TO_CREATE":"10",
                 "NATS_URL":"localhost:4222",
                 "CREATE_USER_QUEUE_SUBJECT":"user.create",
+            },
+            "showLog": true,
+            "cwd": "./"
+        },
+        {
+            "name":"localhost-role-api",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "role-api/cmd/role-api/main.go",
+            "env": {
+                "APPLICATION_PORT":":8080",
+                "APPLICATION_ADDRESS":"localhost",
+                "MYSQL_HOST":"localhost",
+                "MYSQL_USER":"root",
+                "MYSQL_PASSWORD":"12345",
+                "MYSQL_DB_NAME":"zpe_systems",
+                "MYSQL_PORT":"3306",
+                "SECRET": "000000",
+                "INTERVAL_GET_KEYS_TO_CREATE":"10",
             },
             "showLog": true,
             "cwd": "./"
