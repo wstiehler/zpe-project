@@ -47,7 +47,7 @@ func main() {
 		}
 	}()
 
-	err = config.DB.AutoMigrate(createuser.UserEntity{}, createuser.RoleEntity{}, createuser.PermissionEntity{})
+	err = config.DB.AutoMigrate(createuser.UserEntity{})
 
 	if err != nil {
 		logger.Fatal(fmt.Sprintf("Captured panic: %v", err))
@@ -65,18 +65,18 @@ func main() {
 
 }
 
-func setupApi(logger logwrapper.LoggerWrapper, companyService createuser.Service, db gorm.DB) {
+func setupApi(logger logwrapper.LoggerWrapper, service createuser.Service, db gorm.DB) {
 	input := api.Input{
 		Logger: logger,
 	}
 
-	api.Start(input, companyService, &db)
+	api.Start(input, service, &db)
 }
 
-func setupWorker(logger logwrapper.LoggerWrapper, companyService createuser.Service, db gorm.DB) {
+func setupWorker(logger logwrapper.LoggerWrapper, service createuser.Service, db gorm.DB) {
 	input := worker.Input{
 		Logger:   logger,
 		ConfigDB: &db,
 	}
-	worker.Start(input, companyService)
+	worker.Start(input, service)
 }

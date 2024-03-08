@@ -2,6 +2,7 @@ package routes
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/wstiehler/role-api/internal/domain/role"
 	"gorm.io/gorm"
@@ -14,6 +15,7 @@ func MakeCreateUserHandlers(r *gin.Engine, service role.Service, db *gorm.DB) {
 	group := r.Group("/v1")
 	{
 		group.POST("/role", CreateRole(service, db))
+		group.GET("/role/:id", GetRoleByID(service, db))
 		group.POST("/permission", CreatePermission(service, db))
 	}
 }
@@ -56,4 +58,25 @@ func CreatePermission(service role.Service, db *gorm.DB) gin.HandlerFunc {
 
 		c.JSON(http.StatusCreated, permissionCreated)
 	}
+}
+
+func GetRoleByID(service role.Service, db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		id := c.Param("id")
+
+		idInt, _ := strconv.ParseUint(id, 10, 64)
+
+		var uintNum uint = uint(idInt)
+
+		responseView, err := service.GetRoleByID(uintNum, db)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro interno do servidor"})
+			return
+		}
+
+		c.JSON(http.StatusOK, responseView)
+	}
+
 }

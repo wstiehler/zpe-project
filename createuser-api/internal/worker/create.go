@@ -19,9 +19,10 @@ func (c *consumerWhoCreates) Handler(input Input, user UserEntity) error {
 	newUser := createuser.UserEntity{
 		Name:  user.Name,
 		Email: user.Email,
-		Role: createuser.RoleEntity{
-			Role: user.Role,
-		}}
+		// Role: createuser.RoleEntity{
+		// 	Role: user.Role,
+		// }
+	}
 
 	_, err := input.Service.CreateUser(input.ConfigDB, &newUser)
 

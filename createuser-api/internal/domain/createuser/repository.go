@@ -18,18 +18,6 @@ func (r *Repository) CreateUser(user *UserEntity) (UserEntity, error) {
 	return r.queryAdapter.CreateUser(r.db, user)
 }
 
-func (r *Repository) CreateRole(role *RoleEntity) (RoleEntity, error) {
-	return r.queryAdapter.CreateRole(r.db, role)
-}
-
-func (r *Repository) CreatePermission(permission *PermissionEntity) (PermissionEntity, error) {
-	return r.queryAdapter.CreatePermission(r.db, permission)
-}
-
 func (u *Repository) GetUserByEmail(email string) (UserEntity, error) {
 	return u.queryAdapter.GetUserByEmail(u.db, email)
-}
-
-func (u *Repository) GetRoleByID(id uint) (RoleEntity, error) {
-	return u.queryAdapter.GetRoleByID(u.db, id)
 }

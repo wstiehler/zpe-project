@@ -3,6 +3,8 @@ package role
 import (
 	"strings"
 
+	"github.com/wstiehler/role-api/internal/infrastructure/logger"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -36,4 +38,23 @@ func (s *Service) CreatePermission(db *gorm.DB, permission *PermissionEntity) (*
 	}
 
 	return &createdPermission, nil
+}
+
+func (s *Service) GetRoleByID(id uint, db *gorm.DB) (*RoleDTO, error) {
+	logger, dispose := logger.New()
+	defer dispose()
+
+	role, err := s.repo.GetRoleByID(id)
+	if err != nil {
+		logger.Error("Error on get user by email", zap.String("error", err.Error()))
+		return nil, err
+	}
+
+	roleResponse := RoleDTO{
+		Role: NormalizeString(role.Role),
+	}
+
+	logger.Debug("Successfull on get role by id", zap.String("role", roleResponse.Role))
+
+	return &roleResponse, nil
 }

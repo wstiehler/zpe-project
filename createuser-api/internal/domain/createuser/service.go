@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/wstiehler/zpecreateuser-api/internal/infrastructure/logger"
+	roleapi "github.com/wstiehler/zpecreateuser-api/internal/infrastructure/role-api"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -44,6 +45,12 @@ func (s *Service) CreateUser(db *gorm.DB, user *UserEntity) (*UserDTO, error) {
 	user.Id = uuid.New().String()
 	user.Email = NormalizeString(user.Email)
 
+	role, err := roleapi.GetRoleByID(user.RoleId)
+	if err != nil {
+		logger.Error("Error retrieving role details", zap.Error(err))
+		return nil, err
+	}
+
 	createdUser, err := s.repo.CreateUser(user)
 	if err != nil {
 		logger.Error("Error creating new user", zap.Error(err))
@@ -51,12 +58,6 @@ func (s *Service) CreateUser(db *gorm.DB, user *UserEntity) (*UserDTO, error) {
 	}
 
 	logger.Info("User created successfully", zap.String("Name", createdUser.Email))
-
-	role, err := s.repo.GetRoleByID(createdUser.RoleId)
-	if err != nil {
-		logger.Error("Error retrieving role details", zap.Error(err))
-		return nil, err
-	}
 
 	userResponse := UserDTO{
 		Id:    user.Id,
@@ -70,46 +71,23 @@ func (s *Service) CreateUser(db *gorm.DB, user *UserEntity) (*UserDTO, error) {
 	return &userResponse, nil
 }
 
-func (s *Service) CreateRole(db *gorm.DB, role *RoleEntity) (*RoleEntity, error) {
-	role.Role = NormalizeString(role.Role)
-	createdRole, err := s.repo.CreateRole(role)
+func (s *Service) GetUserByEmail(email string, db *gorm.DB) (*UserDTO, error) {
+	logger, dispose := logger.New()
+	defer dispose()
+
+	user, err := s.repo.GetUserByEmail(email)
 	if err != nil {
+		logger.Error("Error on get user by email", zap.String("error", err.Error()))
 		return nil, err
 	}
 
-	return &createdRole, nil
-}
-
-func (s *Service) CreatePermission(db *gorm.DB, permission *PermissionEntity) (*PermissionEntity, error) {
-	permission.Name = NormalizeString(permission.Name)
-	createdPermission, err := s.repo.CreatePermission(permission)
-	if err != nil {
-		return nil, err
+	userResponse := UserDTO{
+		Id:    user.Id,
+		Name:  user.Name,
+		Email: user.Email,
 	}
 
-	return &createdPermission, nil
+	logger.Debug("Successfull on get user by email", zap.String("email", email))
+
+	return &userResponse, nil
 }
-
-// func (s *Service) GetUserByEmail(email string, db *gorm.DB) (*UserDTO, error) {
-// 	logger, dispose := logger.New()
-// 	defer dispose()
-
-// 	user, err := s.repo.GetUserByEmail(email)
-// 	if err != nil {
-// 		logger.Error("Error on get user by email", zap.String("error", err.Error()))
-// 		return nil, err
-// 	}
-
-// 	userResponse := UserDTO{
-// 		Id:    user.Id,
-// 		Name:  user.Name,
-// 		Email: user.Email,
-// 		Role: RoleDTO{
-// 			Role: NormalizeString(user.Role.Role), // Convertendo a role para minúsculas.
-// 		},
-// 	}
-
-// 	logger.Debug("Successfull on get user by email", zap.String("email", email))
-
-// 	return &userResponse, nil
-// }

@@ -32,6 +32,8 @@ type single struct {
 
 	CREATE_USER_QUEUE_SUBJECT string // nolint: golint
 	NATS_URL                  string // nolint: golint
+
+	APPLICATION_URL_ROLE_API string // nolint: golint
 }
 
 func (e *single) Setup() {
@@ -52,6 +54,8 @@ func (e *single) Setup() {
 	e.INTERVAL_GET_KEYS_TO_CREATE = getenvInt64("INTERVAL_GET_KEYS_TO_CREATE", 10)
 	e.CREATE_USER_QUEUE_SUBJECT = getenv("CREATE_USER_QUEUE_SUBJECT", "user.create")
 	e.NATS_URL = getenv("NATS_URL", "nats://localhost:4222")
+
+	e.APPLICATION_URL_ROLE_API = getenv("APPLICATION_URL_ROLE_API", "http://localhost:8080")
 
 	e.CORS_URL = getenv("CORS_URL", "*")
 }
