@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  createuserapi:
+    platform: linux/x86_64
+    build: ./createuser-api/.
+    container_name: createuserapi
+    environment:
+      - ENVIRONMENT=development
+      - APP_VERSION=Local
+      - LOG_LEVEL=DEBUG
+      - APPLICATION_PORT=:8080
+      - APPLICATION_ADDRESS=localhost
+      - CORS_URL=http://localhost:8080
+      - MYSQL_DBNAME=zpe_api
+      - MYSQL_HOST=zpe-mysql
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=12345
+    depends_on:
+      - zpe-db
+      # - traefik
+    ports:
+      - "8080:8080"
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.candystoreapi.rule=Host(`candystoreapi.localhost`)"
+    #   - "traefik.http.routers.candystoreapi.entrypoints=web"
+    #   - "traefik.docker.network=candystore"
+    networks:
+      - zpe-bridge
+
+  # traefik:
+  #   platform: linux/x86_64
+  #   container_name: traefik
+  #   image: traefik:v2.10
+  #   command:
+  #     - "--api.insecure=true"
+  #     - "--providers.docker=true"
+  #     - "--providers.docker.exposedbydefault=false"
+  #     - "--entrypoints.web.address=:80"
+  #   ports:
+  #     - "80:80"
+  #     - "8090:8080"
+  #   volumes:
+  #     - "/var/run/docker.sock:/var/run/docker.sock:ro"
+  #     - "traefik-public-certificates-volume:/certificates"
+  #   networks:
+  #     - candystore
+  #     - candystore-bridge
+
+# volumes:
+#   traefik-public-certificates-volume:
+
+networks:
+  zpe-bridge:
+    driver: bridge

@@ -1,0 +1,51 @@
+version: '3.8'
+
+volumes:
+  data: {}
+
+services:
+  zpe-db:
+    platform: linux/x86_64
+    image: mysql:5.6
+    container_name: zpe-mysql
+    volumes:
+      - data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
+      - MYSQL_DATABASE=zpe_database
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    ports:
+      - "3306:3306"
+    networks:
+      - zpe-bridge
+
+  zpe-db-web:
+    platform: linux/x86_64
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: zpe-mysql-interface
+    links:
+      - zpe-db
+    environment:
+      - PMA_ARBITRARY=1
+    depends_on:
+      zpe-db:
+        condition: service_healthy
+    ports:
+      - 8000:80
+    networks:
+      - zpe-bridge
+
+  nats:
+    container_name: nats
+    image: nats:latest
+    ports:
+      - "4222:4222"
+    networks:
+      - zpe-bridge
+
+networks:
+  zpe-bridge:
+    driver: bridge
