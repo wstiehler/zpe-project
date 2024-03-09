@@ -55,6 +55,25 @@
             },
             "showLog": true,
             "cwd": "./"
+        },
+        {
+            "name":"localhost-detailuser-api",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "detailuser-api/cmd/detailuser-api/main.go",
+            "env": {
+                "APPLICATION_PORT":":8082",
+                "APPLICATION_ADDRESS":"localhost",
+                "MYSQL_HOST":"localhost",
+                "MYSQL_USER":"root",
+                "MYSQL_PASSWORD":"12345",
+                "MYSQL_DB_NAME":"zpe_systems",
+                "MYSQL_PORT":"3306",
+                "SECRET": "000000",
+            },
+            "showLog": true,
+            "cwd": "./"
         }
     ]
 }

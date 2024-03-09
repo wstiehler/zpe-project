@@ -55,11 +55,11 @@ func main() {
 
 	repository := createuser.NewRepository(config.DB, createuser.MysqlAdapter{})
 
-	companyService := createuser.NewService(*repository)
+	service := createuser.NewService(*repository)
 
-	setupWorker(logger, *companyService, *mySqlConfig)
+	setupWorker(logger, *service, *mySqlConfig)
 
-	setupApi(logger, *companyService, *mySqlConfig)
+	setupApi(logger, *service, *mySqlConfig)
 
 	config.CloseConnection(mySqlConfig)
 

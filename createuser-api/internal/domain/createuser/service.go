@@ -79,24 +79,3 @@ func (s *Service) CreateUser(db *gorm.DB, user *UserEntity) (*UserDTO, error) {
 
 	return &userResponse, nil
 }
-
-func (s *Service) GetUserByEmail(email string, db *gorm.DB) (*UserDTO, error) {
-	logger, dispose := logger.New()
-	defer dispose()
-
-	user, err := s.repo.GetUserByEmail(email)
-	if err != nil {
-		logger.Error("Error on get user by email", zap.String("error", err.Error()))
-		return nil, err
-	}
-
-	userResponse := UserDTO{
-		Id:    user.Id,
-		Name:  user.Name,
-		Email: user.Email,
-	}
-
-	logger.Debug("Successfull on get user by email", zap.String("email", email))
-
-	return &userResponse, nil
-}

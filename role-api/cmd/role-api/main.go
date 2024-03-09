@@ -54,9 +54,9 @@ func main() {
 
 	repository := role.NewRepository(config.DB, role.MysqlAdapter{})
 
-	companyService := role.NewService(*repository)
+	service := role.NewService(*repository)
 
-	setupApi(logger, *companyService, *mySqlConfig)
+	setupApi(logger, *service, *mySqlConfig)
 
 	config.CloseConnection(mySqlConfig)
 
