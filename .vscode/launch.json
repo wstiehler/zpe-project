@@ -74,6 +74,25 @@
             },
             "showLog": true,
             "cwd": "./"
+        },
+        {
+            "name":"localhost-updateuser-api",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "updateuser-api/cmd/updateuser-api/main.go",
+            "env": {
+                "APPLICATION_PORT":":8083",
+                "APPLICATION_ADDRESS":"localhost",
+                "MYSQL_HOST":"localhost",
+                "MYSQL_USER":"root",
+                "MYSQL_PASSWORD":"12345",
+                "MYSQL_DB_NAME":"zpe_systems",
+                "MYSQL_PORT":"3306",
+                "SECRET": "000000",
+            },
+            "showLog": true,
+            "cwd": "./"
         }
     ]
 }
