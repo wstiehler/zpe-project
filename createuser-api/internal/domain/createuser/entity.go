@@ -10,7 +10,7 @@ type ModelsEntity struct {
 
 type UserEntity struct {
 	Id        string    `json:"id" gorm:"primary_key"`
-	Name      string    `json:"name"`
+	Name      string    `json:"name" gorm:"unique"`
 	Email     string    `json:"email" gorm:"unique"`
 	Password  string    `json:"password"`
 	CreatedAt time.Time `json:"created_at"`
