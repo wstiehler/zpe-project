@@ -14,7 +14,7 @@ type RoleEntity struct {
 type PermissionEntity struct {
 	ID     uint   `json:"id" gorm:"primary_key"`
 	RoleId uint   `json:"role_id"`
-	Name   string `json:"name" gorm:"unique"`
+	Name   string `json:"name"`
 }
 
 func (r *RoleEntity) TableName() string {

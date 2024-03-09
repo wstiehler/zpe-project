@@ -27,3 +27,11 @@ func (MysqlAdapter) GetRoleByID(db *gorm.DB, id uint) (RoleEntity, error) {
 
 	return role, nil
 }
+
+func (MysqlAdapter) GetPermissionByID(db *gorm.DB, id uint) ([]PermissionEntity, error) {
+	var permissions []PermissionEntity
+	if err := db.Where("role_id = ?", id).Find(&permissions).Error; err != nil {
+		return nil, err
+	}
+	return permissions, nil
+}

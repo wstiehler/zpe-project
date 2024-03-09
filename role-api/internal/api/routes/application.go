@@ -17,6 +17,7 @@ func MakeCreateUserHandlers(r *gin.Engine, service role.Service, db *gorm.DB) {
 		group.POST("/role", CreateRole(service, db))
 		group.GET("/role/:id", GetRoleByID(service, db))
 		group.POST("/permission", CreatePermission(service, db))
+		group.GET("/permission/:id", GetPermissionByRoleID(service, db))
 	}
 }
 
@@ -72,7 +73,28 @@ func GetRoleByID(service role.Service, db *gorm.DB) gin.HandlerFunc {
 		responseView, err := service.GetRoleByID(uintNum, db)
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro interno do servidor"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
+			return
+		}
+
+		c.JSON(http.StatusOK, responseView)
+	}
+
+}
+
+func GetPermissionByRoleID(service role.Service, db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		id := c.Param("id")
+
+		idInt, _ := strconv.ParseUint(id, 10, 64)
+
+		var uintNum uint = uint(idInt)
+
+		responseView, err := service.GetPermissionsByRoleID(uintNum, db)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
 			return
 		}
 

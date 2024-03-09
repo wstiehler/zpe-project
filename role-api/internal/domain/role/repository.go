@@ -25,3 +25,7 @@ func (r *Repository) CreatePermission(permission *PermissionEntity) (PermissionE
 func (u *Repository) GetRoleByID(id uint) (RoleEntity, error) {
 	return u.queryAdapter.GetRoleByID(u.db, id)
 }
+
+func (u *Repository) GetPermissionByID(id uint) ([]PermissionEntity, error) {
+	return u.queryAdapter.GetPermissionByID(u.db, id)
+}

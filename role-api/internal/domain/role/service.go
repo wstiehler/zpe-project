@@ -58,3 +58,26 @@ func (s *Service) GetRoleByID(id uint, db *gorm.DB) (*RoleDTO, error) {
 
 	return &roleResponse, nil
 }
+
+func (s *Service) GetPermissionsByRoleID(roleID uint, db *gorm.DB) ([]PermissionDTO, error) {
+	logger, dispose := logger.New()
+	defer dispose()
+
+	permissions, err := s.repo.GetPermissionByID(roleID)
+	if err != nil {
+		logger.Error("Error retrieving permissions by role ID", zap.Error(err))
+		return nil, err
+	}
+
+	var permissionDTOs []PermissionDTO
+	for _, p := range permissions {
+		permissionDTO := PermissionDTO{
+			Name: p.Name,
+		}
+		permissionDTOs = append(permissionDTOs, permissionDTO)
+	}
+
+	logger.Debug("Successfully retrieved permissions by role ID", zap.Uint("roleID", roleID))
+
+	return permissionDTOs, nil
+}
