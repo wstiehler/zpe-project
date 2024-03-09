@@ -14,29 +14,6 @@
             "host": "localhost"
         },
         {
-            "name":"localhost-create-user",
-            "type": "go",
-            "request": "launch",
-            "mode": "auto",
-            "program": "createuser-api/cmd/createuser-api/main.go",
-            "env": {
-                "APPLICATION_PORT":":8081",
-                "APPLICATION_ADDRESS":"localhost",
-                "MYSQL_HOST":"localhost",
-                "MYSQL_USER":"root",
-                "MYSQL_PASSWORD":"12345",
-                "MYSQL_DB_NAME":"zpe_systems",
-                "MYSQL_PORT":"3306",
-                "SECRET": "000000",
-                "INTERVAL_GET_KEYS_TO_CREATE":"10",
-                "NATS_URL":"localhost:4222",
-                "CREATE_USER_QUEUE_SUBJECT":"user.create",
-                "APPLICATION_URL_ROLE_API":"http://localhost:8080"
-            },
-            "showLog": true,
-            "cwd": "./"
-        },
-        {
             "name":"localhost-role-api",
             "type": "go",
             "request": "launch",
@@ -57,11 +34,34 @@
             "cwd": "./"
         },
         {
-            "name":"localhost-detailuser-api",
+            "name":"localhost-user-create-api",
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "detailuser-api/cmd/detailuser-api/main.go",
+            "program": "user-create-api/cmd/user-create-app/main.go",
+            "env": {
+                "APPLICATION_PORT":":8081",
+                "APPLICATION_ADDRESS":"localhost",
+                "MYSQL_HOST":"localhost",
+                "MYSQL_USER":"root",
+                "MYSQL_PASSWORD":"12345",
+                "MYSQL_DB_NAME":"zpe_systems",
+                "MYSQL_PORT":"3306",
+                "SECRET": "000000",
+                "INTERVAL_GET_KEYS_TO_CREATE":"10",
+                "NATS_URL":"localhost:4222",
+                "CREATE_USER_QUEUE_SUBJECT":"user.create",
+                "APPLICATION_URL_ROLE_API":"http://localhost:8080"
+            },
+            "showLog": true,
+            "cwd": "./"
+        },
+        {
+            "name":"localhost-user-detail-api",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "user-detail-api/cmd/user-detail-app/main.go",
             "env": {
                 "APPLICATION_PORT":":8082",
                 "APPLICATION_ADDRESS":"localhost",
@@ -76,11 +76,11 @@
             "cwd": "./"
         },
         {
-            "name":"localhost-updateuser-api",
+            "name":"localhost-user-modify-remove-api",
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "updateuser-api/cmd/updateuser-api/main.go",
+            "program": "user-modify-remove-api/cmd/user-modify-remove-app/main.go",
             "env": {
                 "APPLICATION_PORT":":8083",
                 "APPLICATION_ADDRESS":"localhost",
