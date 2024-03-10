@@ -9,13 +9,13 @@ new-project:
 	c4builder
 
 config:
-	cd alerts-publisher && npm run config
+	cd zpe-systems && npm run config
 
 watch:
-	cd alerts-publisher && npm run watch
+	cd zpe-systems && npm run watch
 
 build:
-	cd alerts-publisher && npm run build
+	cd zpe-systems && npm run build
 
 install:
 	@if [ "${has_java}" = "" ]; then\
@@ -25,10 +25,10 @@ install:
 	npm install
 
 config-standalone:
-	cd alerts-publisher && c4builder config
+	cd zpe-systems && c4builder config
 
 watch-standalone:
-	cd alerts-publisher && c4builder site --watch
+	cd zpe-systems && c4builder site --watch
 
 build-standalone:
-	cd alerts-publisher && c4builder
+	cd zpe-systems && c4builder
