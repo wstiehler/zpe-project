@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func MakeCreateUserHandlers(r *gin.Engine, service role.Service, db *gorm.DB) {
+func MakeRoleHandlers(r *gin.Engine, service role.Service, db *gorm.DB) {
 
 	group := r.Group("/v1")
 	{
@@ -26,14 +26,14 @@ func CreateRole(service role.Service, db *gorm.DB) gin.HandlerFunc {
 		var role role.RoleEntity
 
 		if err := c.BindJSON(&role); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
 			return
 		}
 
 		roleCreated, err := service.CreateRole(db, &role)
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create role"})
 			return
 		}
 
@@ -46,14 +46,14 @@ func CreatePermission(service role.Service, db *gorm.DB) gin.HandlerFunc {
 		var permission role.PermissionEntity
 
 		if err := c.BindJSON(&permission); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
 			return
 		}
 
 		permissionCreated, err := service.CreatePermission(db, &permission)
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create permission"})
 			return
 		}
 
@@ -73,7 +73,7 @@ func GetRoleByID(service role.Service, db *gorm.DB) gin.HandlerFunc {
 		responseView, err := service.GetRoleByID(uintNum, db)
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get role"})
 			return
 		}
 
@@ -94,7 +94,7 @@ func GetPermissionByRoleID(service role.Service, db *gorm.DB) gin.HandlerFunc {
 		responseView, err := service.GetPermissionsByRoleID(uintNum, db)
 
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get permissions"})
 			return
 		}
 

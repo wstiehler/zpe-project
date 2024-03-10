@@ -1,8 +1,6 @@
 package api
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/wstiehler/role-api/internal/api/middlewares"
 	"github.com/wstiehler/role-api/internal/api/routes"
@@ -23,7 +21,7 @@ func Start(input Input, roleService role.Service, db *gorm.DB) {
 
 	logger := input.Logger
 
-	logger.Info("Starting ZPECreateUser-API")
+	logger.Info("Starting ZPERole-API")
 
 	applicationPort := resolvePort()
 
@@ -36,12 +34,8 @@ func Start(input Input, roleService role.Service, db *gorm.DB) {
 	}
 
 	r.SetTrustedProxies([]string{env.APPLICATION_ADDRESS})
-	routes.MakeCreateUserHandlers(r, roleService, db)
+	routes.MakeRoleHandlers(r, roleService, db)
 	routes.MakeHealthHandle(r)
-
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"status": http.StatusOK})
-	})
 
 	if err := r.Run(applicationPort); err != nil {
 		logger.Fatal("failed to start server", zap.Error(err))

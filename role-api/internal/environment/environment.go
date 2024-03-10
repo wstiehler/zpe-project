@@ -71,7 +71,6 @@ func init() {
 	env.Setup()
 }
 
-// IsDevelopment returns true if the environment is development
 func (e *single) IsDevelopment() bool {
 	return e.ENVIRONMENT == "development"
 }

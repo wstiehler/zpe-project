@@ -13,7 +13,7 @@ type RoleEntity struct {
 
 type PermissionEntity struct {
 	ID     uint   `json:"id" gorm:"primary_key"`
-	RoleId uint   `json:"role_id"`
+	RoleId uint   `json:"role_id" gorm:"index:idx_role_id"`
 	Name   string `json:"name"`
 }
 
