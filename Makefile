@@ -26,9 +26,6 @@ dep-dev-stop: ## Stop development dependencies
 dep-dev-status: ## Show status from development dependencies
 	@docker-compose status
 
-dev-start-with-tools: dep-dev-run ## Run application and dependencies
-	@docker-compose -f docker-compose.app.yml -f docker-compose.tools.yml -f docker-compose.yml up -d  --build --remove-orphans
-
 dev-start-with-db: dep-dev-run ## Run application and dependencies
 	@docker-compose -f  docker-compose.yml -f docker-compose.app.yml up -d  --build --remove-orphans
 

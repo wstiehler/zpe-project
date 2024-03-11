@@ -18,8 +18,8 @@ setup: ## Setup project
 create-temp:
 	@mkdir -p tmp
 
-init-db:
-	sqlite3 ./../database-test.db < ./../init-db.sql
+init-db-test:
+	sqlite3 ./../database-test.db < ./../init-db-test.sql
 
 drop-db:
 	sqlite3 ./../database-test.db 'DELETE FROM roles; DELETE FROM permissions; DELETE FROM users;'
@@ -47,7 +47,7 @@ test-unit: create-temp ## run tests
 	go test -count=1 -race -coverprofile=tmp/coverage-report-unit.cov -covermode=atomic --tags=unit ./...
 
 test-unit-verbose: create-temp ## Run unit tests
-	make init-db
+	make init-db-test
 	go test -v -count=1 -race -coverprofile=tmp/coverage-report-unit.cov -covermode=atomic --tags=unit ./...
 
 test: create-temp ## create temp folder 

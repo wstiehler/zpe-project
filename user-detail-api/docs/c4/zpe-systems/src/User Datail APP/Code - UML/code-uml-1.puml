@@ -1,0 +1,671 @@
+@startuml
+namespace api {
+    class Input << (S,Aquamarine) >> {
+        + Logger logwrapper.LoggerWrapper
+        + PublishManager publishmanager.UseCases
+
+    }
+}
+
+
+namespace appcontext {
+    interface Context  {
+        + Done() 
+        + SetLogger(logger logwrapper.LoggerWrapper) 
+        + Logger() logwrapper.LoggerWrapper
+        + Context() context.Context
+        + TraceID() string
+        + SpanID() string
+
+    }
+    class appContext << (S,Aquamarine) >> {
+        - logger logwrapper.LoggerWrapper
+        - defaultBackgroundContext context.Context
+        - ginContext *gin.Context
+
+        + SetLogger(logger logwrapper.LoggerWrapper) 
+        + Logger() logwrapper.LoggerWrapper
+        + Context() context.Context
+        + Done() 
+        + TraceID() string
+        + SpanID() string
+
+    }
+    class appcontext.ContextKey << (T, #FF7700) >>  {
+    }
+    class mock << (S,Aquamarine) >> {
+        - logger logwrapper.LoggerWrapper
+
+        + SetLogger(logger logwrapper.LoggerWrapper) 
+        + Logger() logwrapper.LoggerWrapper
+        + Context() context.Context
+        + TraceID() string
+        + SpanID() string
+        + Done() 
+
+    }
+}
+
+"appcontext.Context" <|-- "appcontext.appContext"
+"appcontext.Context" <|-- "appcontext.mock"
+
+namespace communicatorapi {
+    class AuthenticationResponseDTO << (S,Aquamarine) >> {
+        + IdToken string
+        + TokenType string
+        + ExpiresIn int
+
+    }
+    class CommunicatorAPIMock << (S,Aquamarine) >> {
+        - authentication(message string) error
+
+        + SendMessage(ctx appcontext.Context, msg publisher.MessageDTO) (string, error)
+
+    }
+    class ContextVars << (S,Aquamarine) >> {
+        + Title string
+        + Link string
+
+    }
+    class Input << (S,Aquamarine) >> {
+        + Endpoint string
+        + EnableTrace bool
+        + OCSIMEndpoint string
+        + OCSIMClientID string
+        + OCSIMClientSecret string
+        + OCSIMGrantType string
+        + Sender string
+        + Template string
+        + Receiver string
+
+    }
+    class NotificationPostDTO << (S,Aquamarine) >> {
+        + Template string
+        + ContextVars ContextVars
+        + Receiver string
+        + Sender string
+
+    }
+    class NotificationResponseDTO << (S,Aquamarine) >> {
+        + ID string
+        + Template string
+        + ContextVars ContextVars
+        + Body string
+        + Receiver string
+        + ReceiverType string
+        + CreatedAt time.Time
+        + UpdatedAt time.Time
+        + Caller string
+        + Region string
+        + Sender string
+
+    }
+    class communicatorAPI << (S,Aquamarine) >> {
+        - endpoint string
+        - comunicatorClient *resty.Client
+        - ocsimClient *resty.Client
+        - enableTrace bool
+        - ocsimEndpoint string
+        - ocsimClientID string
+        - ocsimClientSecret string
+        - ocsimGrantType string
+        - sender string
+        - template string
+        - receiver string
+
+        - authentication(ctx appcontext.Context) (string, error)
+        - debugPrint(ctx appcontext.Context, resp *resty.Response) 
+
+        + SendMessage(ctx appcontext.Context, msg publisher.MessageDTO) (string, error)
+
+    }
+}
+
+"publisher.Sender" <|-- "communicatorapi.CommunicatorAPIMock"
+"publisher.Sender" <|-- "communicatorapi.communicatorAPI"
+
+namespace database {
+    class dynamoDB << (S,Aquamarine) >> {
+        - tableName string
+        - db *dynamodb.Client
+
+        - upsert(applicationEntity publishmanager.PublisherEntity) (*publishmanager.PublisherEntity, error)
+
+        + Find(key string) (*publishmanager.PublisherEntity, error)
+        + Insert(applicationEntity publishmanager.PublisherEntity) (*publishmanager.PublisherEntity, error)
+
+    }
+    class memoryDatabase << (S,Aquamarine) >> {
+        - records <font color=blue>map</font>[string]*publishmanager.PublisherEntity
+
+        + Find(key string) (*publishmanager.PublisherEntity, error)
+        + Insert(applicationEntity publishmanager.PublisherEntity) (*publishmanager.PublisherEntity, error)
+        + Upsert(applicationEntity publishmanager.PublisherEntity) (*publishmanager.PublisherEntity, error)
+        + Delete(key string) error
+
+    }
+}
+
+"publishmanager.RepositoryReader" <|-- "database.dynamoDB"
+"publishmanager.RepositoryWriter" <|-- "database.dynamoDB"
+"publishmanager.RepositoryReader" <|-- "database.memoryDatabase"
+"publishmanager.RepositoryWriter" <|-- "database.memoryDatabase"
+
+namespace environment {
+    class Single << (S,Aquamarine) >> {
+        + ENVIRONMENT string
+        + APP_VERSION string
+        + APP_PORT string
+        + APP_URL string
+        + AWS_ENDPOINT string
+        + AWS_REGION string
+        + AWS_SQS_URL string
+        + AWS_PROFILE string
+        + LOG_LEVEL string
+        + TIME_TO_WAITING_MINUTES int
+        + DYNAMO_AWS_ENDPOINT string
+        + DYNAMO_TABLE_NAME string
+        + SQS_AWS_ENDPOINT string
+        + INTERVAL_GET_KEYS_TO_CREATE int64
+        + COMMUNICATOR_API_URL string
+        + COMMUNICATOR_API_TEMPLATE string
+        + COMMUNICATOR_API_SENDER string
+        + COMMUNICATOR_API_RECEIVER string
+        + OCSIM_URL string
+        + OCSIM_CLIENT_ID string
+        + OCSIM_CLIENT_SECRET string
+        + OCSIM_GRANT_TYPE string
+        + TOKEN string
+
+        + Setup() 
+        + IsDevelopment() bool
+
+    }
+}
+
+
+namespace logwrapper {
+    interface Logger  {
+        + Info(msg string, fields ...zap.Field) 
+        + Error(msg string, fields ...zap.Field) 
+        + Warn(msg string, fields ...zap.Field) 
+        + Fatal(msg string, fields ...zap.Field) 
+        + Debug(msg string, fields ...zap.Field) 
+
+    }
+    interface LoggerWrapper  {
+        + SetTraceID(v string) LoggerWrapper
+        + SetVersion(v string) LoggerWrapper
+        + CreateSpan() LoggerWrapper
+        + RemoveSpan() LoggerWrapper
+        + TraceID() string
+        + Version() string
+        + Span() *Span
+
+    }
+    class Span << (S,Aquamarine) >> {
+        - parent *Span
+
+        + ID string
+
+    }
+    class Zap << (S,Aquamarine) >> {
+        + Logger zap.Logger
+
+        + Info(msg string, fields ...zap.Field) 
+        + Warn(msg string, fields ...zap.Field) 
+        + Error(msg string, fields ...zap.Field) 
+        + Fatal(msg string, fields ...zap.Field) 
+        + Debug(msg string, fields ...zap.Field) 
+
+    }
+    class logWrapper << (S,Aquamarine) >> {
+        - logger Logger
+        - traceID string
+        - span *Span
+        - version string
+
+        - clone() LoggerWrapper
+        - mergeField(fields ...zap.Field) []zap.Field
+
+        + SetTraceID(v string) LoggerWrapper
+        + TraceID() string
+        + SetVersion(v string) LoggerWrapper
+        + Version() string
+        + Span() *Span
+        + CreateSpan() LoggerWrapper
+        + RemoveSpan() LoggerWrapper
+        + Info(msg string, fields ...zap.Field) 
+        + Warn(msg string, fields ...zap.Field) 
+        + Error(msg string, fields ...zap.Field) 
+        + Fatal(msg string, fields ...zap.Field) 
+        + Debug(msg string, fields ...zap.Field) 
+
+    }
+    class mock << (S,Aquamarine) >> {
+        + SetTraceID(v string) LoggerWrapper
+        + TraceID() string
+        + SetVersion(v string) LoggerWrapper
+        + Version() string
+        + CreateSpan() LoggerWrapper
+        + RemoveSpan() LoggerWrapper
+        + Span() *Span
+        + Info(msg string, fields ...zap.Field) 
+        + Warn(msg string, fields ...zap.Field) 
+        + Error(msg string, fields ...zap.Field) 
+        + Fatal(msg string, fields ...zap.Field) 
+        + Debug(msg string, fields ...zap.Field) 
+
+    }
+}
+"logwrapper.Logger" *-- "logwrapper.LoggerWrapper"
+
+"logwrapper.Logger" <|-- "logwrapper.Zap"
+"logwrapper.Logger" <|-- "logwrapper.logWrapper"
+"logwrapper.LoggerWrapper" <|-- "logwrapper.logWrapper"
+"logwrapper.Logger" <|-- "logwrapper.mock"
+"logwrapper.LoggerWrapper" <|-- "logwrapper.mock"
+
+namespace metric {
+    interface Counter  {
+        + Inc() 
+
+    }
+    interface CounterSuccess  {
+        + Success() 
+        + Error() 
+
+    }
+    class HTTP << (S,Aquamarine) >> {
+        + Handler string
+        + Method string
+        + StatusCode string
+        + StartedAt time.Time
+        + FinishedAt time.Time
+        + Duration float64
+
+        + Started() 
+        + Finished() 
+
+    }
+    interface Histogram  {
+        + Started() 
+        + Finished(lvs ...string) 
+        + Success() 
+        + Error() 
+
+    }
+    interface HistogramVec  {
+        + Start() HistogramVec
+        + Finished(constLabels <font color=blue>map</font>[string]string) 
+        + Success() 
+        + Error() 
+        + With( prometheus.Labels) prometheus.Observer
+        + Observe( float64,  prometheus.Labels) 
+
+    }
+    interface PrometheusCounterBuilder  {
+        + Namespace( string) PrometheusCounterBuilder
+        + Name( string) PrometheusCounterBuilder
+        + Description( string) PrometheusCounterBuilder
+        + ConstLabels( <font color=blue>map</font>[string]string) PrometheusCounterBuilder
+        + LabelNames( []string) PrometheusCounterBuilder
+        + BuildCounterVec() *prometheus.CounterVec
+        + BuildHistogramVec() (HistogramVec, error)
+
+    }
+    interface Service  {
+        + SaveHTTP(h *HTTP) 
+
+    }
+    class counterObject << (S,Aquamarine) >> {
+        - counter prometheus.Counter
+
+        + Help string
+        + Name string
+        + ConstLabels <font color=blue>map</font>[string]string
+
+        - init() error
+
+        + Inc() 
+
+    }
+    class counterSuccessObject << (S,Aquamarine) >> {
+        - counterSuccess Counter
+        - counterError Counter
+
+        + Success() 
+        + Error() 
+
+    }
+    class histogramObject << (S,Aquamarine) >> {
+        - histogram *prometheus.HistogramVec
+        - startedAt time.Time
+
+        + Started() 
+        + Finished(lvs ...string) 
+        + Success() 
+        + Error() 
+
+    }
+    class histogramVecObject << (S,Aquamarine) >> {
+        - histogram *prometheus.HistogramVec
+        - startedAt time.Time
+
+        + Start() HistogramVec
+        + Finished(labels <font color=blue>map</font>[string]string) 
+        + Observe(duration float64, labels prometheus.Labels) 
+        + With(labels prometheus.Labels) prometheus.Observer
+        + Success() 
+        + Error() 
+
+    }
+    class prometheusCounterBuilder << (S,Aquamarine) >> {
+        - namespace string
+        - name string
+        - description string
+        - constLabels <font color=blue>map</font>[string]string
+        - labelNames []string
+        - bukets []float64
+
+        + Namespace(value string) PrometheusCounterBuilder
+        + Name(value string) PrometheusCounterBuilder
+        + Description(value string) PrometheusCounterBuilder
+        + ConstLabels(value <font color=blue>map</font>[string]string) PrometheusCounterBuilder
+        + LabelNames(value []string) PrometheusCounterBuilder
+        + Bukets(value []float64) PrometheusCounterBuilder
+        + BuildCounterVec() *prometheus.CounterVec
+        + BuildHistogramVec() (HistogramVec, error)
+
+    }
+    class service << (S,Aquamarine) >> {
+        - httpRequestHistogram *prometheus.HistogramVec
+
+        + SaveHTTP(h *HTTP) 
+
+    }
+}
+
+"metric.Counter" <|-- "metric.counterObject"
+"metric.CounterSuccess" <|-- "metric.counterSuccessObject"
+"metric.CounterSuccess" <|-- "metric.histogramObject"
+"metric.Histogram" <|-- "metric.histogramObject"
+"metric.CounterSuccess" <|-- "metric.histogramVecObject"
+"metric.HistogramVec" <|-- "metric.histogramVecObject"
+"metric.PrometheusCounterBuilder" <|-- "metric.prometheusCounterBuilder"
+"metric.Service" <|-- "metric.service"
+
+namespace mock {
+    class histogramObject << (S,Aquamarine) >> {
+        + Started() 
+        + Finished(lvs ...string) 
+        + Success() 
+        + Error() 
+
+    }
+    class mockCounterObject << (S,Aquamarine) >> {
+        - init() error
+
+        + Inc() 
+
+    }
+    class mockCounterSuccessObject << (S,Aquamarine) >> {
+        + Success() 
+        + Error() 
+
+    }
+}
+
+
+
+
+"metric.CounterSuccess" <|-- "mock.histogramObject"
+"metric.Histogram" <|-- "mock.histogramObject"
+"metric.Counter" <|-- "mock.mockCounterObject"
+"metric.CounterSuccess" <|-- "mock.mockCounterSuccessObject"
+
+namespace mocks {
+    class Consumer << (S,Aquamarine) >> {
+        + Consume() ([]*sqs.QueueMessage, error)
+        + ConsumeWithContext(ctx context.Context) ([]*sqs.QueueMessage, error)
+        + PollingIntervalSeconds() int64
+
+    }
+    class Context << (S,Aquamarine) >> {
+        + Context() context.Context
+        + Done() 
+        + Logger() logwrapper.LoggerWrapper
+        + SetLogger(logger logwrapper.LoggerWrapper) 
+        + SpanID() string
+        + TraceID() string
+
+    }
+    class Counter << (S,Aquamarine) >> {
+        + Inc() 
+
+    }
+    class CounterSuccess << (S,Aquamarine) >> {
+        + Error() 
+        + Success() 
+
+    }
+    class Histogram << (S,Aquamarine) >> {
+        + Error() 
+        + Finished(lvs ...string) 
+        + Started() 
+        + Success() 
+
+    }
+    class Logger << (S,Aquamarine) >> {
+        + Debug(msg string, fields ...zapcore.Field) 
+        + Error(msg string, fields ...zapcore.Field) 
+        + Fatal(msg string, fields ...zapcore.Field) 
+        + Info(msg string, fields ...zapcore.Field) 
+        + Warn(msg string, fields ...zapcore.Field) 
+
+    }
+    class LoggerWrapper << (S,Aquamarine) >> {
+        + CreateSpan() logwrapper.LoggerWrapper
+        + Debug(msg string, fields ...zapcore.Field) 
+        + Error(msg string, fields ...zapcore.Field) 
+        + Fatal(msg string, fields ...zapcore.Field) 
+        + Info(msg string, fields ...zapcore.Field) 
+        + RemoveSpan() logwrapper.LoggerWrapper
+        + SetTraceID(v string) logwrapper.LoggerWrapper
+        + SetVersion(v string) logwrapper.LoggerWrapper
+        + Span() *logwrapper.Span
+        + TraceID() string
+        + Version() string
+        + Warn(msg string, fields ...zapcore.Field) 
+
+    }
+    class PublishManager << (S,Aquamarine) >> {
+        + SendMessage(_a0 appcontext.Context, _a1 publishmanager.From, _a2 publishmanager.AlertDTO) error
+
+    }
+    class Publisher << (S,Aquamarine) >> {
+        + SendMessage(_a0 appcontext.Context, _a1 publisher.MessageDTO) (string, error)
+
+    }
+    class QueueWriter << (S,Aquamarine) >> {
+        + Create(_a0 publishmanager.AlertDTO) error
+
+    }
+    class Queuer << (S,Aquamarine) >> {
+        + Create(_a0 publishmanager.AlertDTO) error
+
+    }
+    class Repository << (S,Aquamarine) >> {
+        + Find(applicationID string) (*publishmanager.PublisherEntity, error)
+        + Insert(applicationEntity publishmanager.PublisherEntity) (*publishmanager.PublisherEntity, error)
+
+    }
+    class RepositoryReader << (S,Aquamarine) >> {
+        + Find(applicationID string) (*publishmanager.PublisherEntity, error)
+
+    }
+    class RepositoryWriter << (S,Aquamarine) >> {
+        + Insert(applicationEntity publishmanager.PublisherEntity) (*publishmanager.PublisherEntity, error)
+
+    }
+    class Sender << (S,Aquamarine) >> {
+        + SendMessage(_a0 appcontext.Context, _a1 publisher.MessageDTO) (string, error)
+
+    }
+    class Service << (S,Aquamarine) >> {
+        + SaveHTTP(h *metric.HTTP) 
+
+    }
+    interface mockConstructorTestingTNewConsumer  {
+        + Cleanup( <font color=blue>func</font>() ) 
+
+    }
+    interface mockConstructorTestingTNewContext  {
+        + Cleanup( <font color=blue>func</font>() ) 
+
+    }
+    interface mockConstructorTestingTNewCounter  {
+        + Cleanup( <font color=blue>func</font>() ) 
+
+    }
+    interface mockConstructorTestingTNewCounterSuccess  {
+        + Cleanup( <font color=blue>func</font>() ) 
+
+    }
+    interface mockConstructorTestingTNewHistogram  {
+        + Cleanup( <font color=blue>func</font>() ) 
+
+    }
+    interface mockConstructorTestingTNewLogger  {
+        + Cleanup( <font color=blue>func</font>() ) 
+
+    }
+    interface mockConstructorTestingTNewLoggerWrapper  {
+        + Cleanup( <font color=blue>func</font>() ) 
+
+    }
+    interface mockConstructorTestingTNewPublishManager  {
+        + Cleanup( <font color=blue>func</font>() ) 
+
+    }
+    interface mockConstructorTestingTNewPublisher  {
+        + Cleanup( <font color=blue>func</font>() ) 
+
+    }
+    interface mockConstructorTestingTNewQueueWriter  {
+        + Cleanup( <font color=blue>func</font>() ) 
+
+    }
+    interface mockConstructorTestingTNewQueuer  {
+        + Cleanup( <font color=blue>func</font>() ) 
+
+    }
+    interface mockConstructorTestingTNewRepository  {
+        + Cleanup( <font color=blue>func</font>() ) 
+
+    }
+    interface mockConstructorTestingTNewRepositoryReader  {
+        + Cleanup( <font color=blue>func</font>() ) 
+
+    }
+    interface mockConstructorTestingTNewRepositoryWriter  {
+        + Cleanup( <font color=blue>func</font>() ) 
+
+    }
+    interface mockConstructorTestingTNewSender  {
+        + Cleanup( <font color=blue>func</font>() ) 
+
+    }
+    interface mockConstructorTestingTNewService  {
+        + Cleanup( <font color=blue>func</font>() ) 
+
+    }
+}
+"mock.Mock" *-- "mocks.Consumer"
+"mock.Mock" *-- "mocks.Context"
+"mock.Mock" *-- "mocks.Counter"
+"mock.Mock" *-- "mocks.CounterSuccess"
+"mock.Mock" *-- "mocks.Histogram"
+"mock.Mock" *-- "mocks.Logger"
+"mock.Mock" *-- "mocks.LoggerWrapper"
+"mock.Mock" *-- "mocks.PublishManager"
+"mock.Mock" *-- "mocks.Publisher"
+"mock.Mock" *-- "mocks.QueueWriter"
+"mock.Mock" *-- "mocks.Queuer"
+"mock.Mock" *-- "mocks.Repository"
+"mock.Mock" *-- "mocks.RepositoryReader"
+"mock.Mock" *-- "mocks.RepositoryWriter"
+"mock.Mock" *-- "mocks.Sender"
+"mock.Mock" *-- "mocks.Service"
+
+"sqs.Consumer" <|-- "mocks.Consumer"
+"appcontext.Context" <|-- "mocks.Context"
+"metric.Counter" <|-- "mocks.Counter"
+"metric.CounterSuccess" <|-- "mocks.CounterSuccess"
+"metric.CounterSuccess" <|-- "mocks.Histogram"
+"metric.Histogram" <|-- "mocks.Histogram"
+"logwrapper.LoggerWrapper" <|-- "mocks.LoggerWrapper"
+"publishmanager.UseCases" <|-- "mocks.PublishManager"
+"publisher.Sender" <|-- "mocks.Publisher"
+"publishmanager.QueueWriter" <|-- "mocks.QueueWriter"
+"publishmanager.QueueWriter" <|-- "mocks.Queuer"
+"publishmanager.RepositoryReader" <|-- "mocks.Repository"
+"publishmanager.RepositoryWriter" <|-- "mocks.Repository"
+"publishmanager.RepositoryReader" <|-- "mocks.RepositoryReader"
+"publishmanager.RepositoryWriter" <|-- "mocks.RepositoryWriter"
+"publisher.Sender" <|-- "mocks.Sender"
+"metric.Service" <|-- "mocks.Service"
+
+namespace opsgenie {
+    class Alert << (S,Aquamarine) >> {
+        + AlertId string
+        + Message string
+        + Description string
+        + Alias string
+        + TinyId string
+        + Username string
+        + Responders []Responder
+        + Teams []string
+        + Priority string
+        + Details Details
+        + CreatedAt int64
+        + UpdatedAt int64
+        + Tags []string
+
+    }
+    class Details << (S,Aquamarine) >> {
+        + ImpactedServices string
+        + IncidentAlertType string
+        + IncidentId string
+
+    }
+    class NotificationDTO << (S,Aquamarine) >> {
+        + Action string
+        + Alert Alert
+        + Source Source
+        + IntegrationName string
+        + IntegrationId string
+        + IntegrationType string
+
+        + IsFromIncident() bool
+        + Responders() string
+        + AlertID() string
+        + AlertTitle() string
+        + CreatedAt() int64
+        + ConvertToPublishManagerAlertDTO() publishmanager.AlertDTO
+
+    }
+    class Responder << (S,Aquamarine) >> {
+        + Id string
+        + Type string
+        + Name string
+
+    }
+    class Source << (S,Aquamarine) >> {
+        + Name string
+        + Type string
+
+    }
+}
+
+@enduml
