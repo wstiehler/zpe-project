@@ -55,7 +55,7 @@ func main() {
 
 	repository := createuser.NewRepository(config.DB, createuser.MysqlAdapter{})
 
-	service := createuser.NewService(*repository)
+	service := createuser.NewService(repository)
 
 	setupWorker(logger, *service, *mySqlConfig)
 

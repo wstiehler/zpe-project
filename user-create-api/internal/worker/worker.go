@@ -12,7 +12,7 @@ type Input struct {
 	ConfigDB *gorm.DB
 }
 
-func Start(input Input, companyService createuser.Service) {
+func Start(input Input, service createuser.Service) {
 
 	go createPolling(input, new(consumerWhoCreates))
 }

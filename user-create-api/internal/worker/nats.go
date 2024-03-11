@@ -40,7 +40,7 @@ func ListenToNats(input Input, consumer Consumer) {
 	})
 
 	if err != nil {
-		logger.Fatal("Error subscribing to subject %s: %v", zap.String("Message", subject), zap.String("Error", err.Error()))
+		logger.Error("Error subscribing to subject %s: %v", zap.String("Message", subject), zap.String("Error", err.Error()))
 	}
 
 	logger.Info("Worker subscribed to subject: ", zap.String("Message", subject))

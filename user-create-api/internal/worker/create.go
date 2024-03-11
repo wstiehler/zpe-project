@@ -8,32 +8,27 @@ import (
 
 type consumerWhoCreates struct{}
 
-// PollingIntervalSeconds implements Consumer.
 func (c *consumerWhoCreates) PollingIntervalSeconds() int64 {
 	return environment.GetInstance().INTERVAL_GET_KEYS_TO_CREATE
 }
 
-// Handler implements Consumer.
 func (c *consumerWhoCreates) Handler(input Input, user UserEntity) error {
 
 	newUser := createuser.UserEntity{
-		Name:  user.Name,
-		Email: user.Email,
-		// Role: createuser.RoleEntity{
-		// 	Role: user.Role,
-		// }
+		Name:   user.Name,
+		Email:  user.Email,
+		RoleId: user.RoleId,
 	}
 
 	_, err := input.Service.CreateUser(input.ConfigDB, &newUser)
 
 	if err != nil {
-		input.Logger.Error("Error on create Product", zap.String("Error", err.Error()))
+		input.Logger.Error("Error on create User", zap.String("Error", err.Error()))
 		return err
 	}
 	return nil
 }
 
-// URL implements Consumer.
 func (c *consumerWhoCreates) QueueSubject() string {
 	return environment.GetInstance().CREATE_USER_QUEUE_SUBJECT
 
