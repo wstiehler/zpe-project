@@ -6,7 +6,7 @@ This project aims to create a microservices ecosystem for managing user CRUD ope
 ## Execution Guide
 
 To run this code, you need to have Makefile and Docker installed on your system.
-***You must have ports 3000, 8080, 8081, 8082 and 8083 free to run the APIs***
+***You must have ports 3000 (documentation), 8080(roles-api), 8081(user-create-api), 8082(user-detail-api) and 8083(user-modify-delete-api) free to run the APIs***
 
 ### Steps for Execution
 
