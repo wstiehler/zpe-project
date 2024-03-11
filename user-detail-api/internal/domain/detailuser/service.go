@@ -16,10 +16,9 @@ type Service struct {
 
 var ErrUserNotFound = errors.New("user not found")
 
-func NewService(repo Repository) *Service {
-	return &Service{repo}
+func NewService(repo *Repository) *Service {
+	return &Service{*repo}
 }
-
 func NormalizeString(s string) string {
 	return strings.ToLower(s)
 }

@@ -48,7 +48,7 @@ func main() {
 
 	repository := detailuser.NewRepository(config.DB, detailuser.MysqlAdapter{})
 
-	service := detailuser.NewService(*repository)
+	service := detailuser.NewService(repository)
 
 	setupApi(logger, *service, *mySqlConfig)
 
