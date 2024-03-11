@@ -34,6 +34,9 @@ The documentation has been generated using C4Builder tools. To access the docume
    make dev-start-with-db
 ```
 
+After executing the above command, the documentation will be accessible at [http://localhost:3000](http://localhost:3000).
+
+
 ***To use the application methods, follow the instructions below:***
 
 1. Open the Postman.
@@ -56,7 +59,7 @@ inside the application folder, run the command (Is necessary that local docker r
    make test-e2e-local
 ```
 
-After executing the above command, the documentation will be accessible at [http://localhost:3000](http://localhost:3000).
+<hr>
 
 ## Directory structure
 
