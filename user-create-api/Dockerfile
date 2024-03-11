@@ -15,7 +15,7 @@ ENV GOOS linux
 ENV GOARCH ${GOARCH:-amd64}
 ENV CGO_ENABLED=0
 
-RUN go build -v -o zpe-api cmd/createuser-api/main.go
+RUN go build -v -o user-create-api cmd/user-create-app/main.go
 
 
 ##########################
@@ -31,9 +31,9 @@ RUN addgroup -S ${APP_GROUP} && adduser -S ${APP_USER} -G ${APP_GROUP}  --no-cre
 RUN apk --no-cache add ca-certificates \
     && update-ca-certificates
 
-COPY --from=builder ${APP_HOME}/zpe-api ${APP_HOME}/zpe-api
+COPY --from=builder ${APP_HOME}/user-create-api ${APP_HOME}/user-create-api
 
-RUN chown ${APP_USER}:${APP_GROUP} ${APP_HOME}/zpe-api \
+RUN chown ${APP_USER}:${APP_GROUP} ${APP_HOME}/user-create-api \
     /etc/ssl/certs/ca-certificates.crt
 
 RUN sed 's/ash/nologin/g' /etc/passwd
@@ -45,22 +45,22 @@ RUN sed 's/ash/nologin/g' /etc/passwd
 FROM alpine:3.14
 
 ENV APP_HOME /build
-ENV APP_USER evoluinfo
+ENV APP_USER zpe
 
 ARG VERSION
 ENV APP_VERSION=$VERSION
 ENV GIN_MODE=release
 
-COPY --from=user ${APP_HOME}/zpe-api ${APP_HOME}/zpe-api
+COPY --from=user ${APP_HOME}/user-create-api ${APP_HOME}/user-create-api
 COPY --from=user /etc/passwd /etc/passwd
 COPY --from=user /etc/group /etc/group
 COPY --from=user /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 
-COPY --from=builder /build/zpe-api /usr/local/bin/zpe-api
+COPY --from=builder /build/user-create-api /usr/local/bin/user-create-api
 
 USER $APP_USER
 WORKDIR $APP_HOME
 
 EXPOSE 8080
 
-ENTRYPOINT [ "createuser-api" ]
+ENTRYPOINT [ "user-create-api" ]

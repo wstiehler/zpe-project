@@ -1,10 +1,10 @@
 version: '3.8'
 
 services:
-  createuserapi:
+  role-api:
     platform: linux/x86_64
-    build: ./createuser-api/.
-    container_name: createuserapi
+    build: ./role-api/.
+    container_name: role-api
     environment:
       - ENVIRONMENT=development
       - APP_VERSION=Local
@@ -19,38 +19,91 @@ services:
       - MYSQL_PASSWORD=12345
     depends_on:
       - zpe-db
-      # - traefik
     ports:
       - "8080:8080"
-    # labels:
-    #   - "traefik.enable=true"
-    #   - "traefik.http.routers.candystoreapi.rule=Host(`candystoreapi.localhost`)"
-    #   - "traefik.http.routers.candystoreapi.entrypoints=web"
-    #   - "traefik.docker.network=candystore"
     networks:
       - zpe-bridge
 
-  # traefik:
-  #   platform: linux/x86_64
-  #   container_name: traefik
-  #   image: traefik:v2.10
-  #   command:
-  #     - "--api.insecure=true"
-  #     - "--providers.docker=true"
-  #     - "--providers.docker.exposedbydefault=false"
-  #     - "--entrypoints.web.address=:80"
-  #   ports:
-  #     - "80:80"
-  #     - "8090:8080"
-  #   volumes:
-  #     - "/var/run/docker.sock:/var/run/docker.sock:ro"
-  #     - "traefik-public-certificates-volume:/certificates"
-  #   networks:
-  #     - candystore
-  #     - candystore-bridge
+  user-create-api:
+    platform: linux/x86_64
+    build: ./user-create-api/.
+    container_name: user-create-api
+    environment:
+      - ENVIRONMENT=development
+      - APP_VERSION=Local
+      - LOG_LEVEL=DEBUG
+      - APPLICATION_PORT=:8081
+      - APPLICATION_ADDRESS=localhost
+      - CORS_URL=http://localhost:8081
+      - MYSQL_DBNAME=zpe_api
+      - MYSQL_HOST=zpe-mysql
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=12345
+      - SECRET=000000
+      - INTERVAL_GET_KEYS_TO_CREATE=10
+      - NATS_URL=http://nats:4222
+      - CREATE_USER_QUEUE_SUBJECT=user.create
+      - APPLICATION_URL_ROLE_API=http://role-api:8080
+    depends_on:
+      - zpe-db
+      - nats
+    ports:
+      - "8081:8081"
+    networks:
+      - zpe-bridge
 
-# volumes:
-#   traefik-public-certificates-volume:
+  user-detail-api:
+    platform: linux/x86_64
+    build: ./user-detail-api/.
+    container_name: user-detail-api
+    environment:
+      - ENVIRONMENT=development
+      - APP_VERSION=Local
+      - LOG_LEVEL=DEBUG
+      - APPLICATION_PORT=:8082
+      - APPLICATION_ADDRESS=localhost
+      - CORS_URL=http://localhost:8082
+      - MYSQL_DBNAME=zpe_api
+      - MYSQL_HOST=zpe-mysql
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=12345
+      - SECRET=000000
+      - APPLICATION_URL_ROLE_API=http://role-api:8080
+    depends_on:
+      - zpe-db
+      - nats
+    ports:
+      - "8082:8082"
+    networks:
+      - zpe-bridge
+
+  user-modify-remove-api:
+    platform: linux/x86_64
+    build: ./user-modify-remove-api/.
+    container_name: user-modify-remove-api
+    environment:
+      - ENVIRONMENT=development
+      - APP_VERSION=Local
+      - LOG_LEVEL=DEBUG
+      - APPLICATION_PORT=:8083
+      - APPLICATION_ADDRESS=localhost
+      - CORS_URL=http://localhost:8083
+      - MYSQL_DBNAME=zpe_api
+      - MYSQL_HOST=zpe-mysql
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=12345
+      - SECRET=000000
+      - APPLICATION_URL_ROLE_API=http://role-api:8080
+    depends_on:
+      - zpe-db
+      - nats
+    ports:
+      - "8083:8083"
+    networks:
+      - zpe-bridge
 
 networks:
   zpe-bridge:

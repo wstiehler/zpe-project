@@ -26,6 +26,8 @@ To run this code, you need to have Makefile and Docker installed on your system.
    
 2. Import the provided request collection file (postman_collection.json).
 
+3. ![Link to insominia documentation](https://documenter.getpostman.com/view/31816718/2sA2xiVrrj)
+
 
 ***Documentation***
 
@@ -61,7 +63,6 @@ After executing the above command, the documentation will be accessible at [http
 | | |____domain_app
 |____docs
 
-|
 ```
 
 ![Screenshot](/docs/docs-png/arch.jpg)
