@@ -6,7 +6,13 @@ This project aims to create a microservices ecosystem for managing user CRUD ope
 ## Execution Guide
 
 To run this code, you need to have Makefile and Docker installed on your system.
-***You must have ports 3000 (documentation), 8080(roles-api), 8081(user-create-api), 8082(user-detail-api) and 8083(user-modify-delete-api) free to run the APIs***
+***You must have ports free to run the APIs***
+
+* 3000 (documentation), 
+* 8080(roles-api), 
+* 8081(user-create-api), 
+* 8082(user-detail-api)
+* 8083(user-modify-delete-api)
 
 ***Documentation and Function Requeriments***
 
@@ -42,12 +48,12 @@ The documentation has been generated using C4Builder tools. To access the docume
 inside the application folder, run the command (Is necessary that local docker run):
 - Unit test
 ```bash
-   make make test-unit-verbose
+   make test-unit-verbose
 ```
 ----
 - E2E tests
 ```bash
-   make make test-e2e-local
+   make test-e2e-local
 ```
 
 After executing the above command, the documentation will be accessible at [http://localhost:3000](http://localhost:3000).
