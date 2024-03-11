@@ -42,6 +42,7 @@
             "env": {
                 "APPLICATION_PORT":":8081",
                 "APPLICATION_ADDRESS":"localhost",
+                "APPLICATION_URL":"http//localhost:8081",
                 "MYSQL_HOST":"localhost",
                 "MYSQL_USER":"root",
                 "MYSQL_PASSWORD":"12345",

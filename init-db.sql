@@ -9,3 +9,14 @@ CREATE TABLE IF NOT EXISTS permissions (
     name TEXT,
     FOREIGN KEY (role_id) REFERENCES roles(id)
 );
+
+-- CREATE TABLE IF NOT EXISTS users (
+--     id TEXT PRIMARY KEY,
+--     name TEXT UNIQUE,
+--     email TEXT UNIQUE,
+--     password TEXT,
+--     role_id INTEGER,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+-- 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     FOREIGN KEY (role_id) REFERENCES roles(id)
+-- );
