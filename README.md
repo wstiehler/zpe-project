@@ -26,7 +26,7 @@ To run this code, you need to have Makefile and Docker installed on your system.
    
 2. Import the provided request collection file (postman_collection.json).
 
-3. [Link to insominia documentation](https://documenter.getpostman.com/view/31816718/2sA2xiVrrj)
+3. [Link to insominia documentation and step by step to run](https://documenter.getpostman.com/view/31816718/2sA2xiVrrj)
 
 
 ***Documentation***
@@ -35,6 +35,19 @@ The documentation has been generated using C4Builder tools. To access the docume
 
 ```bash
    make view-doc
+```
+
+***Local Tests***
+
+inside the application folder, run the command (Is necessary that local docker run):
+- Unit test
+```bash
+   make make test-unit-verbose
+```
+----
+- E2E tests
+```bash
+   make make test-e2e-local
 ```
 
 After executing the above command, the documentation will be accessible at [http://localhost:3000](http://localhost:3000).
