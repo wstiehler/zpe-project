@@ -49,7 +49,7 @@ func TestMethodCompany(t *testing.T) {
 		Name:     "William Teste Create",
 		Email:    "teste-create@teste.com",
 		Password: "teste-password",
-		RoleId:   8,
+		RoleId:   1,
 	}
 
 	t.Run("Createuser_When_return_must_be_success", func(t *testing.T) {

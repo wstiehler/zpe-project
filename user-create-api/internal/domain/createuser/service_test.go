@@ -12,7 +12,7 @@ import (
 	config "github.com/wstiehler/zpecreateuser-api/internal/infrastructure/database"
 )
 
-func TestService_CreatePermission(t *testing.T) {
+func TestService_CreateUser(t *testing.T) {
 	db, err := config.ConnectMemoryDb()
 	assert.NoError(t, err)
 	defer func() {

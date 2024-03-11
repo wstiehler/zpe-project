@@ -46,13 +46,16 @@ func TestMethodCompany(t *testing.T) {
 	readEnv()
 
 	roleCreated := role.RoleEntity{
-		Role: "mmodifier",
+		Role: "aadmin",
 		Permissions: []role.PermissionEntity{
 			{
-				Name: "mmodifier",
+				Name: "modifier",
 			},
 			{
-				Name: "wwatcher",
+				Name: "watcher",
+			},
+			{
+				Name: "deleter",
 			},
 		},
 	}
@@ -65,7 +68,7 @@ func TestMethodCompany(t *testing.T) {
 
 		roleId = role.Id
 
-		assert.Equal(role.Role, "mmodifier")
+		assert.Equal(role.Role, "aadmin")
 		assert.Equal(err, nil)
 	})
 
@@ -74,7 +77,7 @@ func TestMethodCompany(t *testing.T) {
 
 		role, err := client.GetRoleByID(roleId)
 
-		assert.Equal(role.Role, "mmodifier")
+		assert.Equal(role.Role, "aadmin")
 		assert.Equal(err, nil)
 
 	})
