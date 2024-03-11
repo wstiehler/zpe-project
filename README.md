@@ -8,6 +8,14 @@ This project aims to create a microservices ecosystem for managing user CRUD ope
 To run this code, you need to have Makefile and Docker installed on your system.
 ***You must have ports 3000 (documentation), 8080(roles-api), 8081(user-create-api), 8082(user-detail-api) and 8083(user-modify-delete-api) free to run the APIs***
 
+***Documentation and Function Requeriments***
+
+The documentation has been generated using C4Builder tools. To access the documentation, simply execute the following command:
+
+```bash
+   make view-doc
+```
+
 ### Steps for Execution
 
 1. Clone this repository to your local machine.
@@ -28,14 +36,6 @@ To run this code, you need to have Makefile and Docker installed on your system.
 
 3. [Link to insominia documentation and step by step to run](https://documenter.getpostman.com/view/31816718/2sA2xiVrrj)
 
-
-***Documentation***
-
-The documentation has been generated using C4Builder tools. To access the documentation, simply execute the following command:
-
-```bash
-   make view-doc
-```
 
 ***Local Tests***
 
