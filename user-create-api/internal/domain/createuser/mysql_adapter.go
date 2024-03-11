@@ -19,3 +19,9 @@ func (MysqlAdapter) GetUserByEmail(db *gorm.DB, email string) (UserEntity, error
 	db.Where("email = ?", email).First(&user)
 	return user, nil
 }
+
+func (MysqlAdapter) GetRoleByName(db *gorm.DB, name string) (RoleEntity, error) {
+	var role RoleEntity
+	db.Where("role = ?", name).First(&role)
+	return role, nil
+}

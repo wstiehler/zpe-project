@@ -13,6 +13,7 @@ type UserDTO struct {
 }
 
 type RoleDTO struct {
+	ID   uint   `json:"id"`
 	Role string `json:"role"`
 }
 

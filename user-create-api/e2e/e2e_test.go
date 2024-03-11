@@ -15,7 +15,6 @@ import (
 )
 
 var url string
-var timeout int
 
 func readEnv() (string, int) {
 	url = os.Getenv("APPLICATION_URL")
@@ -44,12 +43,14 @@ func TestApiHealth(t *testing.T) {
 func TestMethodCompany(t *testing.T) {
 	assert := assert.New(t)
 	readEnv()
+	client := cmd.NewProjectApi(url)
+	rolee, _ := client.GetRoleByName("aadmin")
 
 	roleCreated := createuser.UserEntity{
 		Name:     "William Teste Create",
 		Email:    "teste-create@teste.com",
 		Password: "teste-password",
-		RoleId:   1,
+		RoleId:   rolee.ID,
 	}
 
 	t.Run("Createuser_When_return_must_be_success", func(t *testing.T) {

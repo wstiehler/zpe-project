@@ -21,3 +21,7 @@ func (r *Repository) CreateUser(user *UserEntity) (UserEntity, error) {
 func (u *Repository) GetUserByEmail(email string) (UserEntity, error) {
 	return u.queryAdapter.GetUserByEmail(u.db, email)
 }
+
+func (u *Repository) GetRoleByName(role string) (RoleEntity, error) {
+	return u.queryAdapter.GetRoleByName(u.db, role)
+}

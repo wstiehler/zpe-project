@@ -19,3 +19,9 @@ func (MemorySqlAdapter) GetUserByEmail(db *gorm.DB, email string) (UserEntity, e
 	db.Where("email = ?", email).First(&user)
 	return user, nil
 }
+
+func (MemorySqlAdapter) GetRoleByName(db *gorm.DB, name string) (RoleEntity, error) {
+	var role RoleEntity
+	db.Where("name = ?", name).First(&role)
+	return role, nil
+}

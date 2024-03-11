@@ -30,6 +30,10 @@ type PermissionEntity struct {
 	Name   string `json:"name"`
 }
 
+func (u *RoleEntity) TableName() string {
+	return "roles"
+}
+
 func (u *UserEntity) TableName() string {
 	return "users"
 }

@@ -79,3 +79,23 @@ func (s *Service) CreateUser(db *gorm.DB, user *UserEntity) (*UserDTO, error) {
 
 	return &userResponse, nil
 }
+
+func (s *Service) GetRoleByName(name string, db *gorm.DB) (*RoleDTO, error) {
+	logger, dispose := logger.New()
+	defer dispose()
+
+	roler, err := s.repo.GetRoleByName(name)
+	if err != nil {
+		logger.Error("Error on get user by email", zap.String("error", err.Error()))
+		return nil, err
+	}
+
+	roleResponse := RoleDTO{
+		ID:   roler.ID,
+		Role: NormalizeString(roler.Role),
+	}
+
+	logger.Debug("Successfull on get role by id", zap.String("role", roleResponse.Role))
+
+	return &roleResponse, nil
+}
