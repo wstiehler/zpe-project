@@ -44,14 +44,11 @@ func TestService_GetRoleByID(t *testing.T) {
 		assert.NoError(t, err)
 	}()
 
-	err = config.AutoMigrateTables(db)
-	assert.NoError(t, err)
-
 	repo := role.NewRepository(db, role.MemorySqlAdapter{})
 	service := role.NewService(repo)
 
 	newRole := &role.RoleEntity{
-		Role: "xpto",
+		Role: "aadmin",
 	}
 
 	_, err = service.CreateRole(db, newRole)
@@ -61,7 +58,7 @@ func TestService_GetRoleByID(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.NotNil(t, roleResponse)
-	assert.Equal(t, "xpto", roleResponse.Role)
+	assert.Equal(t, "aadmin", roleResponse.Role)
 }
 
 func TestService_GetPermissionsByRoleID(t *testing.T) {
