@@ -20,7 +20,7 @@ To run this code, you need to have Makefile and Docker installed on your system.
    make dev-start-with-db
 ```
 
-***Para criar um usuário no software, siga as instruções abaixo:***
+***To use the application methods, follow the instructions below:***
 
 1. Open the Postman.
    
@@ -64,4 +64,4 @@ After executing the above command, the documentation will be accessible at [http
 |
 ```
 
-![Screenshot](docs/docs-png/arch.jpg)
+![Screenshot](/docs/docs-png/arch.jpg)
