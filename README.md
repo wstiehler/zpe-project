@@ -86,5 +86,6 @@ inside the application folder, run the command (Is necessary that local docker r
 |____docs
 
 ```
+<hr>
 
 ![Screenshot](/docs/docs-png/arch.jpg)
