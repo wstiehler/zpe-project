@@ -28,9 +28,6 @@ dep-dev-run: ## Run development dependencies
 dep-dev-stop: ## Stop development dependencies
 	@docker-compose stop
 
-start-ngrok:
-	chmod +x config/scripts/start-ngrok.sh && config/scripts/start-ngrok.sh
-
 dep-dev-status: ## Show status from development dependencies
 	@docker-compose status
 
@@ -46,29 +43,8 @@ dev-down:
 dev-start-db: dep-dev-run ## Run application and dependencies
 	@docker-compose up -d  --build --remove-orphans
 
-show-logs: ## Show logs from development dependencies
-	@docker logs ngps-api -f --tail=100
-
-create-network-external:
-	@docker network create openvagas
-
-create-network:
-	@docker network create openvagas
-
-lint: ## Lint the files
-	@staticcheck ./...
-
-dep: ## Get the dependencies
-	@go get -v -d ./...
-
-build: dep ## Build the binary file
-	@go build -v -o bin/${PROJECT_NAME} web/main.go
-
-clean: ## Remove previous build
-	@rm -f bin/$(PROJECT_NAME)
-
-help: ## Show commands and description
-	@grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
-
 security: ## Check security vulnerabilities
 	@govulncheck ./...
+
+view-doc: ## Run view doc web application
+	@cd docs/c4/zpe-systems && c4builder site --watch

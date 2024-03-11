@@ -20,10 +20,10 @@ create-temp:
 	@mkdir -p tmp
 
 init-db:
-	sqlite3 internal/domain/role/database.db < init-db.sql
+	sqlite3 ./../database-test.db < ./../init-db.sql
 
 drop-db:
-	sqlite3 internal/domain/role/database.db 'DELETE FROM roles; DELETE FROM permissions;'
+	sqlite3 ./../database-test.db 'DELETE FROM roles; DELETE FROM permissions;'
 
 coverage-merge:
 	@rm -rf tmp/coverage-report.cov
@@ -82,4 +82,6 @@ test-race:
 			make test --silent >> tmp/test-race.txt; \
 	done;
 	echo "------------------------------" >> tmp/test-race.txt
-	
+
+go-to-uml:
+	goplantuml -recursive .  > docs/role-api.puml

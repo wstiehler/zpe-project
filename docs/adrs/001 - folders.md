@@ -3,15 +3,12 @@
 ## Context and Problem Statement
 
 ### internal
-Dado que a aplicalçao e privada, usamos a pasta `/internal/` para separar o codigo que nao deve ser exposto para o mundo externo, ou sjea, quase todo o nosso codigo fica em `/internal/`.
+'Given' that the application is private, we use the /internal/ folder to separate the code that should not be exposed to the external world, or in other words, almost all of our code resides in /internal/.
 
 ### infrastructure
-Todo o código periferico a aplicacao, como banco de dados, servicos externos, etc, fica em `/internal/infrastructure/`.
+All peripheral code related to the application, such as databases, external services, etc., is placed in /internal/infrastructure/.
 
 ### domain
-Todo o código que representa o dominio da aplicacao, a lógica de negócio, o proposito da aplicação, fica em `/internal/domain/`.
-
-
-## Referenced Use Case(s)
+All code representing the application's domain, business logic, and purpose, is located in /internal/domain/.
 
 ## Change Log

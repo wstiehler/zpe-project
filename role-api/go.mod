@@ -22,6 +22,7 @@ require (
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/jfeliu007/goplantuml v1.6.2 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
@@ -37,6 +38,7 @@ require (
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/spf13/afero v1.8.2 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
@@ -53,7 +55,7 @@ require (
 	github.com/dghubble/sling v1.4.1
 	github.com/go-playground/validator/v10 v10.14.0 // indirect
 	github.com/golang-jwt/jwt/v5 v5.2.0
-	github.com/stretchr/testify v1.8.3
+	github.com/stretchr/testify v1.9.0
 	gorm.io/driver/mysql v1.5.2
 	gorm.io/driver/sqlite v1.5.4
 )

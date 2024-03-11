@@ -53,6 +53,7 @@ func (s *Service) GetRoleByID(id uint, db *gorm.DB) (*RoleDTO, error) {
 
 	roleResponse := RoleDTO{
 		Role: NormalizeString(role.Role),
+		Id:   role.ID,
 	}
 
 	logger.Debug("Successfull on get role by id", zap.String("role", roleResponse.Role))

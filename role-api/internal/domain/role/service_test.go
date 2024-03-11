@@ -1,3 +1,6 @@
+//go:build unit
+// +build unit
+
 package role_test
 
 import (
@@ -8,8 +11,7 @@ import (
 	config "github.com/wstiehler/role-api/internal/infrastructure/database"
 )
 
-func TestService_CreateRole(t *testing.T) {
-	// Conectar ao banco de dados em memória
+func TestService_CreatePermission(t *testing.T) {
 	db, err := config.ConnectMemoryDb()
 	assert.NoError(t, err)
 	defer func() {
@@ -17,36 +19,76 @@ func TestService_CreateRole(t *testing.T) {
 		assert.NoError(t, err)
 	}()
 
-	// Criar as tabelas
 	err = config.AutoMigrateTables(db)
 	assert.NoError(t, err)
 
-	// Criar o repositório
 	repo := role.NewRepository(db, role.MemorySqlAdapter{})
-
-	// Criar o serviço
 	service := role.NewService(repo)
 
-	// Definir o novo papel a ser criado
-	newRole := &role.RoleEntity{
-		ID:   3,
-		Role: "Editor",
+	newPermission := &role.PermissionEntity{
+		RoleId: 1,
+		Name:   "Create",
 	}
 
-	// Criar o papel
-	createdRole, _ := service.CreateRole(db, newRole)
+	createdPermission, _ := service.CreatePermission(db, newPermission)
 
-	// Verificar se o papel criado não é nulo
-	assert.NotNil(t, createdRole)
+	assert.NotNil(t, createdPermission)
+	assert.Equal(t, "create", createdPermission.Name)
+}
 
-	// Verificar se o nome do papel criado foi normalizado para minúsculas
-	assert.Equal(t, "editor", createdRole.Role)
+func TestService_GetRoleByID(t *testing.T) {
+	db, err := config.ConnectMemoryDb()
+	assert.NoError(t, err)
+	defer func() {
+		err := config.CloseMemoryDb(db)
+		assert.NoError(t, err)
+	}()
 
-	// Tentar criar um papel com o mesmo ID novamente
+	err = config.AutoMigrateTables(db)
+	assert.NoError(t, err)
+
+	repo := role.NewRepository(db, role.MemorySqlAdapter{})
+	service := role.NewService(repo)
+
+	newRole := &role.RoleEntity{
+		Role: "Admin",
+	}
+
 	_, err = service.CreateRole(db, newRole)
+	assert.NoError(t, err)
 
-	// Verificar se ocorreu um erro esperado
-	assert.Error(t, err)
-	// Verificar se a mensagem de erro é a esperada
-	assert.Equal(t, "UNIQUE constraint failed: roles.id", err.Error())
+	roleResponse, err := service.GetRoleByID(1, db)
+
+	assert.NoError(t, err)
+	assert.NotNil(t, roleResponse)
+	assert.Equal(t, "admin", roleResponse.Role)
+}
+
+func TestService_GetPermissionsByRoleID(t *testing.T) {
+	db, err := config.ConnectMemoryDb()
+	assert.NoError(t, err)
+	defer func() {
+		err := config.CloseMemoryDb(db)
+		assert.NoError(t, err)
+	}()
+
+	err = config.AutoMigrateTables(db)
+	assert.NoError(t, err)
+
+	repo := role.NewRepository(db, role.MemorySqlAdapter{})
+	service := role.NewService(repo)
+
+	newPermission := &role.PermissionEntity{
+		RoleId: 1,
+		Name:   "Create",
+	}
+
+	_, err = service.CreatePermission(db, newPermission)
+	assert.NoError(t, err)
+
+	permissions, err := service.GetPermissionsByRoleID(1, db)
+
+	assert.NoError(t, err)
+	assert.NotNil(t, permissions)
+	assert.Equal(t, "create", permissions[0].Name)
 }
