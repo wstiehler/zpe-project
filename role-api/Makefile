@@ -50,7 +50,7 @@ test-unit: create-temp ## run tests
 test-unit-verbose: create-temp ## Run unit tests
 	make init-db
 	go test -v -count=1 -race -coverprofile=tmp/coverage-report-unit.cov -covermode=atomic --tags=unit ./...
-	make drop-db
+##make drop-db
 	
 test: create-temp ## create temp folder 
 	go test -count=1 -race -coverprofile=tmp/coverage-report.cov -covermode=atomic  ./...

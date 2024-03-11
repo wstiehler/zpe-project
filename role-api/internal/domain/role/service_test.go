@@ -1,6 +1,3 @@
-//go:build unit
-// +build unit
-
 package role_test
 
 import (
@@ -51,7 +48,7 @@ func TestService_GetRoleByID(t *testing.T) {
 	service := role.NewService(repo)
 
 	newRole := &role.RoleEntity{
-		Role: "Admin",
+		Role: "xpto",
 	}
 
 	_, err = service.CreateRole(db, newRole)
@@ -61,7 +58,7 @@ func TestService_GetRoleByID(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.NotNil(t, roleResponse)
-	assert.Equal(t, "admin", roleResponse.Role)
+	assert.Equal(t, "xpto", roleResponse.Role)
 }
 
 func TestService_GetPermissionsByRoleID(t *testing.T) {

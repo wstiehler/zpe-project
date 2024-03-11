@@ -14,7 +14,6 @@ type Service struct {
 
 func NewService(repo *Repository) *Service {
 	return &Service{*repo}
-
 }
 
 func NormalizeString(s string) string {
