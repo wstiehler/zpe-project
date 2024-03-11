@@ -1,34 +1,23 @@
 package config
 
 import (
-	"log"
-
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
-func ConnectMemoryDb() (db *gorm.DB, err error) {
-	db, err = gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
-
+func ConnectMemoryDb() (*gorm.DB, error) {
+	db, err := gorm.Open(sqlite.Open("../../../../database-test.db"), &gorm.Config{})
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
-
 	DB = db
-
-	return
-
+	return db, nil
 }
 
-func ClosedConnectionMemoryDb(db *gorm.DB) {
+func CloseMemoryDb(db *gorm.DB) error {
 	sqlDB, err := db.DB()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
-
-	err = sqlDB.Close()
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	return sqlDB.Close()
 }

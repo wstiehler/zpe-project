@@ -11,7 +11,6 @@ import (
 	config "github.com/wstiehler/zpeupdateuser-api/internal/infrastructure/database"
 	"github.com/wstiehler/zpeupdateuser-api/internal/infrastructure/logger"
 	"github.com/wstiehler/zpeupdateuser-api/internal/infrastructure/logger/logwrapper"
-	"github.com/wstiehler/zpeupdateuser-api/internal/worker"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -49,9 +48,7 @@ func main() {
 
 	repository := user.NewRepository(config.DB, user.MysqlAdapter{})
 
-	service := user.NewService(*repository)
-
-	setupWorker(logger, *service, *mySqlConfig)
+	service := user.NewService(repository)
 
 	setupApi(logger, *service, *mySqlConfig)
 
@@ -65,12 +62,4 @@ func setupApi(logger logwrapper.LoggerWrapper, service user.Service, db gorm.DB)
 	}
 
 	api.Start(input, service, &db)
-}
-
-func setupWorker(logger logwrapper.LoggerWrapper, service user.Service, db gorm.DB) {
-	input := worker.Input{
-		Logger:   logger,
-		ConfigDB: &db,
-	}
-	worker.Start(input, service)
 }
