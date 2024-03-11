@@ -1,8 +1,3 @@
-
-include Makefile.coverage.mk
-include Makefile.tests.mk
-include Makefile.nats.mk
-
 PROJECT_NAME := "zpe-api"
 
 
