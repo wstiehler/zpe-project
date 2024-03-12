@@ -61,6 +61,6 @@ COPY --from=builder /build/user-create-api /usr/local/bin/user-create-api
 USER $APP_USER
 WORKDIR $APP_HOME
 
-EXPOSE 8080
+EXPOSE 8081
 
 ENTRYPOINT [ "user-create-api" ]
