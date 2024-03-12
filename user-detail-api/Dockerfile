@@ -61,6 +61,6 @@ COPY --from=builder /build/user-detail-api /usr/local/bin/user-detail-api
 USER $APP_USER
 WORKDIR $APP_HOME
 
-EXPOSE 8080
+EXPOSE 8082
 
 ENTRYPOINT [ "user-detail-api" ]
