@@ -26,20 +26,20 @@ drop-db:
 	sqlite3 ./../database-test.db 'DELETE FROM roles; DELETE FROM permissions;'
 
 coverage-merge:
-	@rm -rf tmp/coverage-report.cov
-	@find tmp/ -name *.cov | xargs 3rd/gocovmerge/bin/gocovmerge > tmp/coverage-report.cov
+	@rm -rf tmp/coverage-report-unit.cov
+	@find tmp/ -name *.cov | xargs 3rd/gocovmerge/bin/gocovmerge > tmp/coverage-report-unit.cov
 
 coverage-percent: ## Print coverage percent. run test-unit before
 	@make coverage-cover --silent | grep total | awk '{print substr($$3, 1, length($$3)-1)}' # $$ only works in makefile
 
 coverage-cover: 
-	@go tool cover -func tmp/coverage-report.cov
+	@go tool cover -func tmp/coverage-report-unit.cov
 
 coverage-show: ## Open coverage report. run test-unit before
-	@go tool cover -html=tmp/coverage-report.cov
+	@go tool cover -html=tmp/coverage-report-unit.cov
 
 coverage-to-html: ## Open coverage report. run test-unit before
-	@go tool cover -html=tmp/coverage-report.cov -o tmp/coverage-report.html
+	@go tool cover -html=tmp/coverage-report-unit.cov -o tmp/coverage-report.html
 
 test-verbose: create-temp ## Run verbose all tests
 	go test -v -count=1 -race -coverprofile=tmp/coverage-report-unit.cov -covermode=atomic ./... 
