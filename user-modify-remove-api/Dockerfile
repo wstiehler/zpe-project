@@ -61,6 +61,6 @@ COPY --from=builder /build/user-modify-remove-api /usr/local/bin/user-modify-rem
 USER $APP_USER
 WORKDIR $APP_HOME
 
-EXPOSE 8080
+EXPOSE 8083
 
 ENTRYPOINT [ "user-modify-remove-api" ]
